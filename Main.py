@@ -1,41 +1,45 @@
-from cgitb import text
-from fileinput import filename
+from asyncio.windows_events import NULL
+import imp
+import cv2
+import easyocr
 import tkinter as tk
+from cgitb import text
 from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
-import cv2
-# from matplotlib import pyplot as plt
-# import numpy as np
-import easyocr
-#import pytesseract
+from fileinput import filename
+from PIL import Image, ImageTk
+
+root = tk.Tk()
 
 def UploadAction():
-    filename = filedialog.askopenfilename()
-    #filename = filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("jpeg files","*.jpg"),("all files","*.*")))
+    filename = filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("png files","*.png"),("jpg files","*.jpg"),("jpeg files","*.jpeg"),("all files","*.*")))
     print('Selected File : ', filename)
     
-    global fname
+    global flag
+    flag = filename
     fname = filename
-    imgp1 = filename
-    imgp = cv2.imread(imgp1)
-    gray = cv2.cvtColor(imgp, cv2.COLOR_BGR2GRAY)
+    fname = cv2.imread(fname)
+    gray = cv2.cvtColor(fname, cv2.COLOR_BGR2GRAY)
     rgb = cv2.cvtColor(gray, cv2.COLOR_GRAY2RGB)
     
     global result
     reader = easyocr.Reader(['en'], gpu=False)
     result = reader.readtext(gray, detail = 0)
-    messagebox.showinfo("Success","File Succesfully Uploaded")  
+    messagebox.showinfo("Success",filename +" \n\nFile Succesfully Uploaded")  
     result
     
-def Scan(event=UploadAction):
-    if (fname == None):
+def Scan():
+    try:
+        result
+    except NameError:
         print('Please Upload File First')
         messagebox.showerror("Error", "Please Upload File First")
     else:
-        print("\nFile Selected : " + fname)
-        print('----------------------------')
-        print("Scanned ID Card")
+        global i
+        i=+1
+        coun = '=========\n'+'No. '+str(i) +'\n'
+        filesel = '\nFile Selected : '+ flag + '\n'
         nik=result[3]
         nama=result[5]
         kotal=result[7]
@@ -45,26 +49,19 @@ def Scan(event=UploadAction):
         agam=result[22]
         tempk=result[0]+', '+result[1]
         tanggalk=result[27]
-        print('=================================')
-        print('NIK : ' + nik)
-        print('Nama : ' + nama)
-        print('Kota Kelahiran : ' + kotal)
-        print('Tanggal Kelahiran : ' + tanggall)
-        print('Jenis Kelamin : ' + jeniske)
-        print('Alamat Lengkap : ' + alamat)
-        print('Agama : ' + agam)
-        print('Tempat Pembuatan KTP : ' + tempk)
-        print('Tanggal Pembuatan KTP : ' + tanggalk)
-        print('=================================')
-root = tk.Tk()
-
-# frm = ttk.Frame(root, padding=10)
-# frm.grid()
-# ttk.Label(frm, text="Hello World!").grid(column=0, row=0)
-# ttk.Label(root,text='ID Card OCR Program')
+        extract='NIK : ' + nik +'\n'+'Nama : ' + nama + '\n' + 'Kota Kelahiran : ' + kotal + '\n' + 'Tanggal Kelahiran : ' + tanggall + '\n'+'Jenis Kelamin : ' + jeniske + '\n'+ 'Alamat Lengkap : ' + alamat +'\n'+ 'Agama : ' + agam +'\n' + 'Tempat Pembuatan KTP : ' + tempk +'\n'+ 'Tanggal Pembuatan KTP : ' + tanggalk
+        text_box = tk.Text(root, height=10, width=50, padx=15, pady=15)
+        text_box.insert(1.0, filesel+extract)
+        text_box.pack()
+        
+logo = Image.open('./logo.png')
+logo = ImageTk.PhotoImage(logo)
+logo_label = tk.Label(image=logo)
+logo_label.image = logo
+logo_label.pack()
 upload = tk.Button(root, text='Upload File', command=UploadAction)
 scan = tk.Button(root, text='Scan Selected File', command=Scan)
-exit = tk.Button(root, text="Exit", command=root.destroy)
+exit = tk.Button(root, text='Exit', command=root.destroy)
 upload.pack()
 scan.pack()
 exit.pack()
