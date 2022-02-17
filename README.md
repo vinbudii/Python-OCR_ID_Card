@@ -26,7 +26,10 @@
     ```
     pip install Pillow
     ```
-
+-   Run the program
+    ```
+    python Main.py
+    ```
 
 
 ## Copyright
