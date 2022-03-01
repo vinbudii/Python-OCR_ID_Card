@@ -30,6 +30,10 @@
     ```
     pip install easyocr
     ```
+-   Run Program
+    ```
+    python Main.py
+    ```
 
 
 ## Copyright
