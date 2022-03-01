@@ -10,25 +10,25 @@
     ```
     https://www.python.org/downloads/
     ```
--   Install OpenCV
+-   Install Anaconda
     ```
-    pip install opencv-python
+    https://www.anaconda.com/products/individual
     ```
--   Install tkinter
+-   Create New Environment in Anaconda
     ```
-    pip install tk
+    conda create -n ocr
+    ```
+-   Change Environment in Anaconda
+    ```
+    conda activate ocr
+    ``` 
+-   Install pytorch in Anaconda
+    ```
+    conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
     ```
 -   Install easyocr
     ```
     pip install easyocr
-    ```
--   Install pillow
-    ```
-    pip install Pillow
-    ```
--   Run the program
-    ```
-    python Main.py
     ```
 
 
